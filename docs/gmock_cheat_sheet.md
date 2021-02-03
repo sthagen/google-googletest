@@ -1,11 +1,5 @@
 # gMock Cheat Sheet
 
-<!-- GOOGLETEST_CM0019 DO NOT DELETE -->
-
-<!-- GOOGLETEST_CM0035 DO NOT DELETE -->
-
-<!-- GOOGLETEST_CM0033 DO NOT DELETE -->
-
 ## Defining a Mock Class
 
 ### Mocking a Normal Class {#MockClass}
@@ -179,8 +173,8 @@ Example usage:
 To customize the default action for a particular method of a specific mock
 object, use `ON_CALL()`. `ON_CALL()` has a similar syntax to `EXPECT_CALL()`,
 but it is used for setting default behaviors (when you do not require that the
-mock method is called). See [here](gmock_cook_book.md#UseOnCall) for a more detailed
-discussion.
+mock method is called). See [here](gmock_cook_book.md#UseOnCall) for a more
+detailed discussion.
 
 ```cpp
 ON_CALL(mock-object, method(matchers))
@@ -228,8 +222,6 @@ A method with no `EXPECT_CALL()` is free to be invoked *any number of times*,
 and the default action will be taken each time.
 
 ## Matchers {#MatcherList}
-
-<!-- GOOGLETEST_CM0020 DO NOT DELETE -->
 
 A **matcher** matches a *single* argument. You can use it inside `ON_CALL()` or
 `EXPECT_CALL()`, or use it to validate a value directly using two macros:
@@ -329,6 +321,7 @@ The `argument` can be either a C string or a C++ string object:
 | `ContainsRegex(string)` | `argument` matches the given regular expression.   |
 | `EndsWith(suffix)`      | `argument` ends with string `suffix`.              |
 | `HasSubstr(string)`     | `argument` contains `string` as a sub-string.      |
+| `IsEmpty()`             | `argument` is an empty string.                     |
 | `MatchesRegex(string)`  | `argument` matches the given regular expression with the match starting at the first character and ending at the last character. |
 | `StartsWith(prefix)`    | `argument` starts with string `prefix`.            |
 | `StrCaseEq(string)`     | `argument` is equal to `string`, ignoring case.    |
@@ -399,10 +392,12 @@ messages, you can use:
 | Matcher                         | Description                                |
 | :------------------------------ | :----------------------------------------- |
 | `Field(&class::field, m)`       | `argument.field` (or `argument->field` when `argument` is a plain pointer) matches matcher `m`, where `argument` is an object of type _class_. |
+| `Field(field_name, &class::field, m)` | The same as the two-parameter version, but provides a better error message. |
 | `Key(e)`                        | `argument.first` matches `e`, which can be either a value or a matcher. E.g. `Contains(Key(Le(5)))` can verify that a `map` contains a key `<= 5`. |
 | `Pair(m1, m2)`                  | `argument` is an `std::pair` whose `first` field matches `m1` and `second` field matches `m2`. |
 | `FieldsAre(m...)`                   | `argument` is a compatible object where each field matches piecewise with `m...`. A compatible object is any that supports the `std::tuple_size<Obj>`+`get<I>(obj)` protocol. In C++17 and up this also supports types compatible with structured bindings, like aggregates. |
 | `Property(&class::property, m)` | `argument.property()` (or `argument->property()` when `argument` is a plain pointer) matches matcher `m`, where `argument` is an object of type _class_. |
+| `Property(property_name, &class::property, m)` | The same as the two-parameter version, but provides a better error message.
 <!-- mdformat on -->
 
 ### Matching the Result of a Function, Functor, or Callback
@@ -423,10 +418,6 @@ messages, you can use:
 | `Pointer(m)`              | `argument` (either a smart pointer or a raw pointer) contains a pointer that matches `m`. `m` will match against the raw pointer regardless of the type of `argument`. |
 | `WhenDynamicCastTo<T>(m)` | when `argument` is passed through `dynamic_cast<T>()`, it matches matcher `m`. |
 <!-- mdformat on -->
-
-<!-- GOOGLETEST_CM0026 DO NOT DELETE -->
-
-<!-- GOOGLETEST_CM0027 DO NOT DELETE -->
 
 ### Multi-argument Matchers {#MultiArgMatchers}
 
@@ -466,8 +457,6 @@ You can make a matcher from one or more other matchers:
 | `AnyOfArray({m0, m1, ..., mn})`, `AnyOfArray(a_container)`, `AnyOfArray(begin, end)`, `AnyOfArray(array)`, or `AnyOfArray(array, count)` | The same as `AnyOf()` except that the matchers come from an initializer list, STL-style container, iterator range, or C-style array. |
 | `Not(m)` | `argument` doesn't match matcher `m`. |
 <!-- mdformat on -->
-
-<!-- GOOGLETEST_CM0028 DO NOT DELETE -->
 
 ### Adapters for Matchers
 
@@ -611,8 +600,6 @@ value, and `foo` by reference.
 
 **Note:** due to technical reasons, `DoDefault()` cannot be used inside a
 composite action - trying to do so will result in a run-time error.
-
-<!-- GOOGLETEST_CM0032 DO NOT DELETE -->
 
 ### Composite Actions
 
@@ -772,7 +759,8 @@ class MockFunction<R(A1, ..., An)> {
 };
 ```
 
-See this [recipe](gmock_cook_book.md#using-check-points) for one application of it.
+See this [recipe](gmock_cook_book.md#using-check-points) for one application of
+it.
 
 ## Flags
 

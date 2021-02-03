@@ -1,7 +1,5 @@
 # gMock Cookbook
 
-<!-- GOOGLETEST_CM0012 DO NOT DELETE -->
-
 You can find recipes for using gMock here. If you haven't yet, please read
 [the dummy guide](gmock_for_dummies.md) first to make sure you understand the
 basics.
@@ -10,8 +8,6 @@ basics.
 recommended to write `using ::testing::Foo;` once in your file before using the
 name `Foo` defined by gMock. We omit such `using` statements in this section for
 brevity, but you should do it in your own code.
-
-<!-- GOOGLETEST_CM0035 DO NOT DELETE -->
 
 ## Creating Mock Classes
 
@@ -183,8 +179,7 @@ class MockStack : public StackInterface<Elem> {
 
 ### Mocking Non-virtual Methods {#MockingNonVirtualMethods}
 
-gMock can mock non-virtual functions to be used in Hi-perf dependency
-injection.<!-- GOOGLETEST_CM0017 DO NOT DELETE -->
+gMock can mock non-virtual functions to be used in Hi-perf dependency injection.
 
 In this case, instead of sharing a common base class with the real class, your
 mock class will be *unrelated* to the real class, but contain methods with the
@@ -830,7 +825,6 @@ A frequently used matcher is `_`, which matches anything:
 ```cpp
   EXPECT_CALL(foo, DoThat(_, NotNull()));
 ```
-<!-- GOOGLETEST_CM0022 DO NOT DELETE -->
 
 ### Combining Matchers {#CombiningMatchers}
 
@@ -1161,8 +1155,6 @@ Note that the predicate function / functor doesn't have to return `bool`. It
 works as long as the return value can be used as the condition in in statement
 `if (condition) ...`.
 
-<!-- GOOGLETEST_CM0023 DO NOT DELETE -->
-
 ### Matching Arguments that Are Not Copyable
 
 When you do an `EXPECT_CALL(mock_obj, Foo(bar))`, gMock saves away a copy of
@@ -1477,8 +1469,6 @@ mock object and gMock.
 ## Setting Expectations
 
 ### Knowing When to Expect {#UseOnCall}
-
-<!-- GOOGLETEST_CM0018 DO NOT DELETE -->
 
 **`ON_CALL`** is likely the *single most under-utilized construct* in gMock.
 
@@ -2170,8 +2160,6 @@ own precedence order distinct from the `ON_CALL` precedence order.
 
 If the built-in actions don't suit you, you can use an existing callable
 (function, `std::function`, method, functor, lambda) as an action.
-
-<!-- GOOGLETEST_CM0024 DO NOT DELETE -->
 
 ```cpp
 using ::testing::_; using ::testing::Invoke;
@@ -3266,8 +3254,6 @@ If you are interested in the mock call trace but not the stack traces, you can
 combine `--gmock_verbose=info` with `--gtest_stack_trace_depth=0` on the test
 command line.
 
-<!-- GOOGLETEST_CM0025 DO NOT DELETE -->
-
 ### Running Tests in Emacs
 
 If you build and run your tests in Emacs using the `M-x google-compile` command
@@ -3641,6 +3627,8 @@ as adding templates in the right place.
 
 class NotNullMatcher {
  public:
+  using is_gtest_matcher = void;
+
   // To implement a polymorphic matcher, we just need to make MatchAndExplain a
   // template on its first argument.
 
@@ -4312,5 +4300,3 @@ expectations.
 Although `std::function` supports unlimited number of arguments, `MockFunction`
 implementation is limited to ten. If you ever hit that limit... well, your
 callback has bigger problems than being mockable. :-)
-
-<!-- GOOGLETEST_CM0034 DO NOT DELETE -->

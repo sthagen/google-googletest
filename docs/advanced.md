@@ -1,9 +1,5 @@
 # Advanced googletest Topics
 
-<!-- GOOGLETEST_CM0016 DO NOT DELETE -->
-
-<!-- GOOGLETEST_CM0035 DO NOT DELETE -->
-
 ## Introduction
 
 Now that you have read the [googletest Primer](primer.md) and learned how to

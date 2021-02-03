@@ -1,9 +1,5 @@
 # gMock for Dummies {#GMockForDummies}
 
-<!-- GOOGLETEST_CM0013 DO NOT DELETE -->
-
-<!-- GOOGLETEST_CM0035 DO NOT DELETE -->
-
 ## What Is gMock?
 
 When you write a prototype or test, often it's not feasible or wise to rely on
@@ -207,8 +203,6 @@ changes in `Foo` much more easily. While this is more work initially, carefully
 choosing the adaptor interface can make your code easier to write and more
 readable (a net win in the long run), as you can choose `FooAdaptor` to fit your
 specific domain much better than `Foo` does.
-
-<!-- GOOGLETEST_CM0029 DO NOT DELETE -->
 
 ## Using Mocks in Tests
 
