@@ -32,10 +32,6 @@
 // This file implements just enough of the matcher interface to allow
 // EXPECT_DEATH and friends to accept a matcher argument.
 
-// IWYU pragma: private, include "testing/base/public/gunit.h"
-// IWYU pragma: friend third_party/googletest/googlemock/.*
-// IWYU pragma: friend third_party/googletest/googletest/.*
-
 #ifndef GTEST_INCLUDE_GTEST_GTEST_MATCHERS_H_
 #define GTEST_INCLUDE_GTEST_GTEST_MATCHERS_H_
 
@@ -67,6 +63,7 @@ namespace testing {
 //   1. a class FooMatcherMatcher that implements the matcher interface:
 //     using is_gtest_matcher = void;
 //     bool MatchAndExplain(const T&, std::ostream*);
+//       (MatchResultListener* can also be used instead of std::ostream*)
 //     void DescribeTo(std::ostream*);
 //     void DescribeNegationTo(std::ostream*);
 //
