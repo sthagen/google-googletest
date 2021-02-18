@@ -1250,12 +1250,10 @@ that satisfies matcher `m`.
 
 For example:
 
-<!-- mdformat off(github rendering does not support multiline tables) -->
 | Expression                   | Description                              |
 | :--------------------------- | :--------------------------------------- |
 | `Field(&Foo::number, Ge(3))` | Matches `x` where `x.number >= 3`.       |
 | `Property(&Foo::name,  StartsWith("John "))` | Matches `x` where `x.name()` starts with  `"John "`. |
-<!-- mdformat on -->
 
 Note that in `Property(&Foo::baz, ...)`, method `baz()` must take no argument
 and be declared as `const`. Don't use `Property()` against member functions that
@@ -1454,6 +1452,8 @@ using ::testing::ElementsAreArray;
 
 Use `Pair` when comparing maps or other associative containers.
 
+{% raw %}
+
 ```cpp
 using testing::ElementsAre;
 using testing::Pair;
@@ -1461,6 +1461,8 @@ using testing::Pair;
   std::map<string, int> m = {{"a", 1}, {"b", 2}, {"c", 3}};
   EXPECT_THAT(m, ElementsAre(Pair("a", 1), Pair("b", 2), Pair("c", 3)));
 ```
+
+{% endraw %}
 
 **Tips:**
 
@@ -2246,7 +2248,7 @@ former, and the former's return type can be implicitly converted to that of the
 latter. So, you can invoke something whose type is *not* exactly the same as the
 mock function, as long as it's safe to do so - nice, huh?
 
-**`Note:`{.escaped}**
+Note that:
 
 *   The action takes ownership of the callback and will delete it when the
     action itself is destructed.
@@ -2332,7 +2334,7 @@ bool Job2(int n, char c) { ... }
   foo.ComplexJob(20);  // Invokes Job2(5, 'a').
 ```
 
-**`Note:`{.escaped}**
+Note that:
 
 *   The action takes ownership of the callback and will delete it when the
     action itself is destructed.
@@ -2877,8 +2879,8 @@ work with non-copyable objects; you'll have to use functors instead.
 #### Legacy workarounds for move-only types {#LegacyMoveOnly}
 
 Support for move-only function arguments was only introduced to gMock in April
-2017. In older code, you may encounter the following workaround for the lack of
-this feature (it is no longer necessary - we're including it just for
+of 2017. In older code, you may encounter the following workaround for the lack
+of this feature (it is no longer necessary - we're including it just for
 reference):
 
 ```cpp
@@ -4123,7 +4125,6 @@ If you are writing a function that returns an `ACTION` object, you'll need to
 know its type. The type depends on the macro used to define the action and the
 parameter types. The rule is relatively simple:
 
-<!-- mdformat off(GitHub does not support multiline tables) -->
 
 | Given Definition              | Expression          | Has Type              |
 | ----------------------------- | ------------------- | --------------------- |
@@ -4135,7 +4136,6 @@ parameter types. The rule is relatively simple:
 | `ACTION_TEMPLATE(Baz, HAS_m_TEMPLATE_PARAMS(...), AND_2_VALUE_PARAMS(p1, p2))` | `Baz<t1, ..., t_m>(bool_value, int_value)` | `BazActionP2<t1, ..., t_m, bool, int>` |
 | ...                           | ...                 | ...                   |
 
-<!-- mdformat on -->
 
 Note that we have to pick different suffixes (`Action`, `ActionP`, `ActionP2`,
 and etc) for actions with different numbers of value parameters, or the action

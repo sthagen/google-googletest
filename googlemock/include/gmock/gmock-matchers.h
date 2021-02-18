@@ -241,7 +241,7 @@
 //
 // To learn more about using these macros, please search for 'MATCHER'
 // on
-// https://github.com/google/googletest/blob/master/googlemock/docs/cook_book.md
+// https://github.com/google/googletest/blob/master/docs/gmock_cook_book.md
 //
 // This file also implements some commonly used argument matchers.  More
 // matchers can be defined by the user implementing the
@@ -252,8 +252,8 @@
 
 // GOOGLETEST_CM0002 DO NOT DELETE
 
-#ifndef GMOCK_INCLUDE_GMOCK_GMOCK_MATCHERS_H_
-#define GMOCK_INCLUDE_GMOCK_GMOCK_MATCHERS_H_
+#ifndef GOOGLETEST_GOOGLEMOCK_INCLUDE_GMOCK_GMOCK_MATCHERS_H_
+#define GOOGLETEST_GOOGLEMOCK_INCLUDE_GMOCK_GMOCK_MATCHERS_H_
 
 #include <algorithm>
 #include <cmath>
@@ -5389,4 +5389,4 @@ GTEST_DISABLE_MSC_WARNINGS_POP_()  //  4251 5046
 // declarations from this file.
 #include "gmock/internal/custom/gmock-matchers.h"
 
-#endif  // GMOCK_INCLUDE_GMOCK_GMOCK_MATCHERS_H_
+#endif  // GOOGLETEST_GOOGLEMOCK_INCLUDE_GMOCK_GMOCK_MATCHERS_H_
