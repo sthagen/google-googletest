@@ -47,6 +47,7 @@
 #include "gmock/gmock-actions.h"
 
 #include <algorithm>
+#include <functional>
 #include <iterator>
 #include <memory>
 #include <string>
@@ -654,8 +655,8 @@ TEST(ReturnTest, AcceptsStringLiteral) {
 TEST(ReturnTest, SupportsReferenceLikeReturnType) {
   // A reference wrapper for std::vector<int>, implicitly convertible from it.
   struct Result {
-    std::vector<int>* v;
-    Result(std::vector<int>& v) : v(&v) {}  // NOLINT
+    const std::vector<int>* v;
+    Result(const std::vector<int>& v) : v(&v) {}  // NOLINT
   };
 
   // Set up an action for a mock function that returns the reference wrapper
@@ -709,6 +710,75 @@ TEST(ReturnTest, PrefersConversionOperator) {
   EXPECT_THAT(mock.AsStdFunction()(), Field(&Out::x, 19));
 }
 
+// It should be possible to use Return(R) with a mock function result type U
+// that is convertible from const R& but *not* R (such as
+// std::reference_wrapper). This should work for both WillOnce and
+// WillRepeatedly.
+TEST(ReturnTest, ConversionRequiresConstLvalueReference) {
+  using R = int;
+  using U = std::reference_wrapper<const int>;
+
+  static_assert(std::is_convertible<const R&, U>::value, "");
+  static_assert(!std::is_convertible<R, U>::value, "");
+
+  MockFunction<U()> mock;
+  EXPECT_CALL(mock, Call).WillOnce(Return(17)).WillRepeatedly(Return(19));
+
+  EXPECT_EQ(17, mock.AsStdFunction()());
+  EXPECT_EQ(19, mock.AsStdFunction()());
+}
+
+// Return(x) should not be usable with a mock function result type that's
+// implicitly convertible from decltype(x) but requires a non-const lvalue
+// reference to the input. It doesn't make sense for the conversion operator to
+// modify the input.
+TEST(ReturnTest, ConversionRequiresMutableLvalueReference) {
+  // Set up a type that is implicitly convertible from std::string&, but not
+  // std::string&& or `const std::string&`.
+  //
+  // Avoid asserting about conversion from std::string on MSVC, which seems to
+  // implement std::is_convertible incorrectly in this case.
+  struct S {
+    S(std::string&) {}  // NOLINT
+  };
+
+  static_assert(std::is_convertible<std::string&, S>::value, "");
+#ifndef _MSC_VER
+  static_assert(!std::is_convertible<std::string&&, S>::value, "");
+#endif
+  static_assert(!std::is_convertible<const std::string&, S>::value, "");
+
+  // It shouldn't be possible to use the result of Return(std::string) in a
+  // context where an S is needed.
+  //
+  // Here too we disable the assertion for MSVC, since its incorrect
+  // implementation of is_convertible causes our SFINAE to be wrong.
+  using RA = decltype(Return(std::string()));
+
+  static_assert(!std::is_convertible<RA, Action<S()>>::value, "");
+#ifndef _MSC_VER
+  static_assert(!std::is_convertible<RA, OnceAction<S()>>::value, "");
+#endif
+}
+
+TEST(ReturnTest, MoveOnlyResultType) {
+  // Return should support move-only result types when used with WillOnce.
+  {
+    MockFunction<std::unique_ptr<int>()> mock;
+    EXPECT_CALL(mock, Call)
+        // NOLINTNEXTLINE
+        .WillOnce(Return(std::unique_ptr<int>(new int(17))));
+
+    EXPECT_THAT(mock.AsStdFunction()(), Pointee(17));
+  }
+
+  // The result of Return should not be convertible to Action (so it can't be
+  // used with WillRepeatedly).
+  static_assert(!std::is_convertible<decltype(Return(std::unique_ptr<int>())),
+                                     Action<std::unique_ptr<int>()>>::value,
+                "");
+}
+
 // Tests that Return(v) is covaraint.
 
 struct Base {
@@ -758,19 +828,6 @@ TEST(ReturnTest, ConvertsArgumentWhenConverted) {
   action.Perform(std::tuple<>());
   EXPECT_FALSE(converted) << "Action must NOT convert its argument "
                           << "when performed.";
-}
-
-class DestinationType {};
-
-class SourceType {
- public:
-  // Note: a non-const typecast operator.
-  operator DestinationType() { return DestinationType(); }
-};
-
-TEST(ReturnTest, CanConvertArgumentUsingNonConstTypeCastOperator) {
-  SourceType s;
-  Action<DestinationType()> action(Return(s));
 }
 
 // Tests that ReturnNull() returns NULL in a pointer-returning function.
