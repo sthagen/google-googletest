@@ -323,8 +323,8 @@ T* DynamicCastMessageForGtest(proto2::MessageLite* msg) {
 #endif  // GTEST_HAS_RTTI
 
 GTEST_DISABLE_MSC_WARNINGS_PUSH_(
-    4251 GMOCK_MAYBE_5046_ /* class A needs to have dll-interface to be used by
-                              clients of class B */
+    // class A needs to have dll-interface to be used by clients of class B
+    4251 GMOCK_MAYBE_5046_
     /* Symbol involving type with internal linkage not defined */)
 
 namespace testing {
@@ -3971,8 +3971,8 @@ class [[nodiscard]] UnorderedElementsAreMatcherImpl
   }
 
  private:
-  template <typename ElementIter>
-  MatchMatrix AnalyzeElements(ElementIter elem_first, ElementIter elem_last,
+  template <typename ElementIter, typename ElementIterEnd>
+  MatchMatrix AnalyzeElements(ElementIter elem_first, ElementIterEnd elem_last,
                               ::std::vector<std::string>* element_printouts,
                               MatchResultListener* listener) const {
     element_printouts->clear();
